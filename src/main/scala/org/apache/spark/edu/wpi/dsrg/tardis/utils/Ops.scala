@@ -58,9 +58,13 @@ object Ops extends Logging with Serializable {
       val result = cartesianProduct(eleList)
       val finalResult = result.toArray
         .map(x => cvtSaxToIsaxHex(x.toArray, idxCfg.startHrc, idxCfg.bitStep))
-      Random.setSeed(eqCfg.eqSeed)
 //      Util.writeLog(content = "==> the tsSAXArray Length is: %d".format(finalResult.length))
-      Random.shuffle(finalResult.toSeq).toArray.take(eqCfg.eqMaxSAXNbr)
+      if (finalResult.length < eqCfg.eqMaxSAXNbr){
+        finalResult
+      }else{
+        Random.setSeed(eqCfg.eqSeed)
+        Random.shuffle(finalResult.toSeq).toArray.take(eqCfg.eqMaxSAXNbr)
+      }
     } else if(eqCfg.eqSortSAXType == 1){
       val eleList = (tsLbSAX zip tsUbSAX).map{case (lb, ub) => (lb to ub).toList}.toList.map(x => medianFirst(x))
       val result = cartesianProduct(eleList)
